@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Search</title>
+    <style>
+      input[type="text"] {
+        width: 400px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      input[type="submit"] {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      img {
+        max-width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Book Search</h1>
+    <!-- 검색어 입력을 위한 form 요소 -->
+    <form onsubmit="searchBooks(); return false;">
+      <input type="text" id="searchTerm" placeholder="Enter book title">
+      <input type="submit" value="Search">
+    </form>
+    <!-- 검색 결과를 표시할 div 요소 -->
+    <div id="result"></div>
+    <script>
+      function searchBooks() {
+        // 검색어 입력 요소에서 검색어를 가져옵니다.
+        const searchTerm = document.getElementById('searchTerm').value;
+        // 검색어를 인코딩하여 API 호출 URL을 생성합니다.
+        const url = `/book?title=${encodeURIComponent(searchTerm)}`;
+        // XMLHttpRequest 객체를 생성합니다.
+        const xhr = new XMLHttpRequest();
+        // GET 요청을 생성한 URL로 보냅니다.
+        xhr.open('GET', url);
+        // 응답이 도착하면 처리할 콜백 함수를 등록합니다.
+        xhr.onload = function() {
+          // 응답 상태가 200이면 성공적으로 이미지 URL을 받은 것입니다.
+          if (xhr.status === 200) {
+            // 결과를 표시할 div 요소를 가져옵니다.
+            const result = document.getElementById('result');
+            // 이미지 태그를 이용하여 이미지를 표시합니다.
+            result.innerHTML = `<img src="${xhr.response}">`;
+          } else {
+            // 에러 메시지를 출력합니다.
+            console.error(xhr.statusText);
+          }
+        };
+        // 에러 발생시 처리할 콜백 함수를 등록합니다.
+        xhr.onerror = function() {
+          // 에러 메시지를 출력합니다.
+          console.error(xhr.statusText);
+        };
+        // 요청을 보냅니다.
+        xhr.send();
+      }
+    </script>
+  </body>
+</html>
